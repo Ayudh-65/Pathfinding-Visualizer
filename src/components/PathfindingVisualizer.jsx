@@ -41,7 +41,7 @@ export default function PathfindingVisualizer() {
   
 
   const calculateGridSize = () => {
-    const rowCount = Math.max(Math.floor(window.innerHeight * 0.88 / NODE_SIZE), MIN_ROWS);
+    const rowCount = Math.max(Math.floor(window.innerHeight * 0.84 / NODE_SIZE), MIN_ROWS);
     const columnCount = Math.max(Math.floor(window.innerWidth * 0.98 / NODE_SIZE) - 1, MIN_COLUMNS);
     const newStartNode = [Math.floor(rowCount * 0.5), Math.floor(columnCount * 0.2)]
     const newFinishNode = [Math.floor(rowCount * 0.5), Math.floor(columnCount * 0.8)]
@@ -196,14 +196,24 @@ export default function PathfindingVisualizer() {
   };
 
   return (
-    <div>
+    <div className="base">
       <div className="menu">
-        <button className="visualizeButton" onClick={visualizeDijkstra}>
-          Visualize!
-        </button>
-        <button className="clearButton" onClick={clearGrid}>
-          Clear Grid
-        </button>
+        <div className="titleDiv">Pathfinding Visualizer</div>
+        <div className="controlsDiv">
+          <select name="algorithm" className="algoDropDown">
+            <option value="dijkstra">Dijkstra's</option>
+            <option value="dfs">DFS</option>
+          </select>
+          <button className="visualizeButton" onClick={visualizeDijkstra}>
+            Visualize
+          </button>
+          <button className="clearButton" onClick={clearGrid}>
+            Clear Grid
+          </button>
+        </div>
+        <div className="infoButtonDiv">
+          <button>i</button>
+        </div>
       </div>
       <div className="grid">
         {grid.map((row, rowId) => {

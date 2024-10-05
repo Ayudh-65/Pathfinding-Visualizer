@@ -1,9 +1,9 @@
 .node {
   width: 25px;
   height: 25px;
-  outline: 1px solid grey;
-  background-color: white;
-  font-size: xx-small;
+  outline: 1px solid rgb(141, 141, 141);
+  background-color: black;
+  color: white;
 }
 
 .node:hover {
@@ -12,23 +12,23 @@
 
 
 .start {
-  background-color: green;
+  background-color: rgb(8, 185, 58);
 }
 
 .finish {
-  background-color: red;
+  background-color: rgb(246, 33, 33);
 }
 
 .wall {
-  background-color: grey;
+  background-color: rgb(103, 103, 103);
 }
 
 .visited {
-  background-color: lightblue;
+  background-color: rgb(113, 164, 230);
 }
 
 .path {
-  background-color: yellow;
+  background-color: rgb(233, 166, 93);
 }
 
 .node[draggable="true"] {
