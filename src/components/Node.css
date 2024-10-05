@@ -1,8 +1,6 @@
 .node {
-  width: 2.25vw;
-  height: 3.25vh;
-  max-width: 25px;
-  max-height: 25px;
+  width: 25px;
+  height: 25px;
   outline: 1px solid grey;
   background-color: white;
   font-size: xx-small;

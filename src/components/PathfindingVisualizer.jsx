@@ -1,27 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { dijkstra, getDijkstraNodesInShortestPathOrder } from "../algorithms/dijkstra";
 import "./Node.css";
 import "./PathfindingVisualizer.css";
 
-const START_NODE_COLUMN = 8;
-const START_NODE_ROW = 6;
-const FINISH_NODE_COLUMN = 32;
-const FINISH_NODE_ROW = 13;
+const MIN_ROWS = 5;
+const MIN_COLUMNS = 6;
+// Node size in pixels
+const NODE_SIZE = 25;
 
-const ROWS = 20;
-const COLUMNS = 40;
 
-const getInitialGrid = () => {
+const getInitialGrid = (rowCount, columnCount, startNode, finishNode) => {
   const newGrid = [];
-  for (let row = 0; row <= ROWS; row++) {
+  for (let row = 0; row <= rowCount; row++) {
     const currentRow = [];
-    for (let column = 0; column <= COLUMNS; column++) {
+    for (let column = 0; column <= columnCount; column++) {
       currentRow.push({
         column,
         row,
-        isStart: column === START_NODE_COLUMN && row === START_NODE_ROW,
-        isFinish: column === FINISH_NODE_COLUMN && row === FINISH_NODE_ROW,
+        isStart: row === startNode[0] && column === startNode[1],
+        isFinish: row === finishNode[0] && column === finishNode[1],
         distance: Infinity,
         isVisited: false,
         isWall: false,
@@ -34,11 +32,43 @@ const getInitialGrid = () => {
 };
 
 export default function PathfindingVisualizer() {
-  const [grid, setGrid] = useState(getInitialGrid());
+  const [gridSize, setGridSize] = useState([MIN_ROWS, MIN_COLUMNS]);
+  const [startNode, setStartNode] = useState([3, 2]);
+  const [finishNode, setFinishNode] = useState([3, 5]);
+  const [grid, setGrid] = useState(getInitialGrid(gridSize[0], gridSize[1], startNode, finishNode));
   const [draggedNode, setDraggedNode] = useState(null);
   const [creatingWalls, setCreatingWalls] = useState(false);
-  const [startNode, setStartNode] = useState([START_NODE_ROW, START_NODE_COLUMN]);
-  const [finishNode, setFinishNode] = useState([FINISH_NODE_ROW, FINISH_NODE_COLUMN]);
+  
+
+  const calculateGridSize = () => {
+    const rowCount = Math.max(Math.floor(window.innerHeight * 0.88 / NODE_SIZE), MIN_ROWS);
+    const columnCount = Math.max(Math.floor(window.innerWidth * 0.98 / NODE_SIZE) - 1, MIN_COLUMNS);
+    const newStartNode = [Math.floor(rowCount * 0.5), Math.floor(columnCount * 0.2)]
+    const newFinishNode = [Math.floor(rowCount * 0.5), Math.floor(columnCount * 0.8)]
+
+    setStartNode(newStartNode);
+    setFinishNode(newFinishNode);
+    setGridSize([rowCount, columnCount]);
+  };
+
+  useEffect(() => {
+    calculateGridSize();
+    window.addEventListener("resize", calculateGridSize);
+
+    return () => {
+      window.removeEventListener("resize", calculateGridSize);
+    };
+  }, []);
+
+  useEffect(() => {
+    setGrid(getInitialGrid(gridSize[0], gridSize[1], startNode, finishNode));
+  }, [gridSize])
+
+  useEffect(() => {
+    // If mouse leaves the grid
+    window.addEventListener("mouseup", () => setCreatingWalls(false));
+    return () => window.removeEventListener("mouseup", () => setCreatingWalls(false));
+  }, []);
 
   const clearGrid = () => {
     const newGrid = grid.map((row) =>
