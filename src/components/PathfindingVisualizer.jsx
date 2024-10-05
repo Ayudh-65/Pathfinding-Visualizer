@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 
-import {
-  dijkstra,
-  getDijkstraNodesInShortestPathOrder,
-} from "../algorithms/dijkstra";
+import { dijkstra, getDijkstraNodesInShortestPathOrder } from "../algorithms/dijkstra";
 import "./Node.css";
 import "./PathfindingVisualizer.css";
 
@@ -39,21 +36,43 @@ const getInitialGrid = () => {
 export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState(getInitialGrid());
   const [draggedNode, setDraggedNode] = useState(null);
-  const [startNode, setStartNode] = useState([
-    START_NODE_ROW,
-    START_NODE_COLUMN,
-  ]);
-  const [finishNode, setFinishNode] = useState([
-    FINISH_NODE_ROW,
-    FINISH_NODE_COLUMN,
-  ]);
+  const [creatingWalls, setCreatingWalls] = useState(false);
+  const [startNode, setStartNode] = useState([START_NODE_ROW, START_NODE_COLUMN]);
+  const [finishNode, setFinishNode] = useState([FINISH_NODE_ROW, FINISH_NODE_COLUMN]);
+
+  const clearGrid = () => {
+    const newGrid = grid.map((row) =>
+      row.map((node) => {
+        const nodeDoc = document.getElementById(`node-${node.row}-${node.column}`);
+        if (nodeDoc) {
+          nodeDoc.className = "node" + (node.isStart ? " start" : node.isFinish ? " finish" : "");
+        }
+        return {
+          ...node,
+          distance: Infinity,
+          isVisited: false,
+          isWall: false,
+          previousNode: null,
+        };
+      })
+    );
+    setGrid(newGrid);
+  };
 
   const handleDragStart = (nodeType) => {
     setDraggedNode(nodeType);
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    if(creatingWalls) setCreatingWalls(false);
+  };
+
   const handleDrop = (row, column) => {
-    const newGrid = grid.slice();
+    if(!draggedNode) return;
+    if(creatingWalls) setCreatingWalls(false);
+
+    const newGrid = [...grid];
 
     // make existing start/finish node into regular node
     if (draggedNode === "start")
@@ -72,18 +91,31 @@ export default function PathfindingVisualizer() {
     setDraggedNode(null);
   };
 
+  const toggleWall = (row, column, create = true) => {
+    const newGrid = [...grid];
+    newGrid[row][column].isWall = create;
+    setGrid(newGrid);
+  };
+
+  const handleMouseDown = (row, column, e) => {
+    if(grid[row][column].isStart || grid[row][column].isFinish) return;
+
+    setCreatingWalls(true);
+    toggleWall(row, column, !e.shiftKey);
+  };
+
+  const handleMouseEnter = (row, column, e) => {
+    if(!creatingWalls) return;
+    if(grid[row][column].isStart || grid[row][column].isFinish) return;
+    toggleWall(row, column, !e.shiftKey);
+  };
+
   const visualizeDijkstra = async () => {
     // Clear previous path and reset node states
-    const newGrid = grid.slice();
-    for (const row of newGrid) {
-      for (const node of row) {
+    const newGrid = grid.map((row) =>
+      row.map((node) => {
         if (node.isVisited || node.distance !== Infinity || node.previousNode) {
-          node.isVisited = false;
-          node.distance = Infinity;
-          node.previousNode = null;
-          const nodeDoc = document.getElementById(
-            `node-${node.row}-${node.column}`
-          );
+          const nodeDoc = document.getElementById(`node-${node.row}-${node.column}`);
           if (nodeDoc) {
             nodeDoc.className =
               "node" +
@@ -95,31 +127,30 @@ export default function PathfindingVisualizer() {
                 ? " wall"
                 : "");
           }
+          return {
+            ...node,
+            distance: Infinity,
+            isVisited: false,
+            previousNode: null,
+          };
         }
-      }
-    }
+        return node;
+      })
+    );
     setGrid(newGrid);
 
     const startNodeObj = newGrid[startNode[0]][startNode[1]];
     const finishNodeObj = newGrid[finishNode[0]][finishNode[1]];
-    const visitedNodesInOrder = await dijkstra(
-      newGrid,
-      startNodeObj,
-      finishNodeObj
-    );
-    const nodesInShortestPathOrder = await getDijkstraNodesInShortestPathOrder(
-      finishNodeObj
-    );
+    const visitedNodesInOrder = await dijkstra(newGrid, startNodeObj, finishNodeObj);
+    const nodesInShortestPathOrder = await getDijkstraNodesInShortestPathOrder(finishNodeObj);
 
     for (let i = 0; i < visitedNodesInOrder.length; i++) {
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         if (node.isStart || node.isFinish) return;
-        const nodeDoc = document.getElementById(
-          `node-${node.row}-${node.column}`
-        );
+        const nodeDoc = document.getElementById(`node-${node.row}-${node.column}`);
         if (nodeDoc) nodeDoc.className = "node visited";
-      }, 5 * i);
+      }, 7 * i);
     }
 
     setTimeout(() => {
@@ -127,13 +158,11 @@ export default function PathfindingVisualizer() {
         setTimeout(() => {
           const node = nodesInShortestPathOrder[i];
           if (node.isStart || node.isFinish) return;
-          const nodeDoc = document.getElementById(
-            `node-${node.row}-${node.column}`
-          );
+          const nodeDoc = document.getElementById(`node-${node.row}-${node.column}`);
           if (nodeDoc) nodeDoc.className = "node path";
         }, 10 * i);
       }
-    }, 5 * visitedNodesInOrder.length);
+    }, 7 * visitedNodesInOrder.length);
   };
 
   return (
@@ -141,6 +170,9 @@ export default function PathfindingVisualizer() {
       <div className="menu">
         <button className="visualizeButton" onClick={visualizeDijkstra}>
           Visualize!
+        </button>
+        <button className="clearButton" onClick={clearGrid}>
+          Clear Grid
         </button>
       </div>
       <div className="grid">
@@ -165,9 +197,15 @@ export default function PathfindingVisualizer() {
                       isStart ? "start" : isFinish ? "finish" : null
                     )
                   }
-                  onDropCapture={() => handleDrop(row, column)}
-                  onDragOver={(e) => e.preventDefault()}
-                  draggable
+                  onDrop={() => handleDrop(row, column)}
+                  onDragOver={(e) => handleDragOver(e)}
+                  onMouseDown={(e) => {
+                    if (isStart || isFinish) return;
+                    handleMouseDown(row, column, e);
+                  }}
+                  onMouseEnter={(e) => handleMouseEnter(row, column, e)}
+                  onMouseUp={() => setCreatingWalls(false)}
+                  draggable={isStart || isFinish}
                 ></div>
               ))}
             </div>

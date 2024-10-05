@@ -21,6 +21,10 @@
   background-color: red;
 }
 
+.wall {
+  background-color: grey;
+}
+
 .visited {
   background-color: lightblue;
 }
