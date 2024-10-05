@@ -1,0 +1,34 @@
+.node {
+  width: 2.25vw;
+  height: 3.25vh;
+  max-width: 25px;
+  max-height: 25px;
+  outline: 1px solid grey;
+  background-color: white;
+  font-size: xx-small;
+}
+
+.node:hover {
+  background-color: lightgray;
+}
+
+
+.start {
+  background-color: green;
+}
+
+.finish {
+  background-color: red;
+}
+
+.visited {
+  background-color: lightblue;
+}
+
+.path {
+  background-color: yellow;
+}
+
+.node[draggable="true"] {
+  cursor: grab;
+}
