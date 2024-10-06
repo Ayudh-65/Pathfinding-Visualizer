@@ -243,7 +243,7 @@ export default function PathfindingVisualizer() {
         <div className="controlsDiv">
           <label htmlFor="algorithm" className="algoSelectLabel">Algorithm:</label>
           <select onChange={(e) => handleAlgoChange(e)} id="algorithm" className="algoDropDown">
-            <option value="dijkstra">Dijkstra's</option>
+            <option value="bfs">BFS</option>
             <option value="dfs">DFS</option>
           </select>
           <button className="visualizeButton" onClick={visualizeAlgorithm}>

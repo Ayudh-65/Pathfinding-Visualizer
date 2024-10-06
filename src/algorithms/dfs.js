@@ -1,25 +1,27 @@
 // dfs.js
 export function depthFirstSearch(grid, startNode, finishNode) {
-    const visitedNodesInOrder = [];
-    const stack = [startNode];
-    startNode.isVisited = true;
-  
-    while (stack.length > 0) {
-      const currentNode = stack.pop();
-      visitedNodesInOrder.push(currentNode);
-  
-      if (currentNode === finishNode) return visitedNodesInOrder;
-  
-      const unvisitedNeighbors = getUnvisitedNeighbors(currentNode, grid);
-      for (const neighbor of unvisitedNeighbors) {
+  const visitedNodesInOrder = [];
+  const stack = [startNode];
+  startNode.isVisited = true;
+
+  while (stack.length > 0) {
+    const currentNode = stack.pop();
+    visitedNodesInOrder.push(currentNode);
+
+    if (currentNode === finishNode) return visitedNodesInOrder;
+
+    const unvisitedNeighbors = getUnvisitedNeighbors(currentNode, grid);
+    for (const neighbor of unvisitedNeighbors) {
+      if (!neighbor.isWall) {
         neighbor.isVisited = true;
         neighbor.previousNode = currentNode;
         stack.push(neighbor);
       }
     }
-  
-    return visitedNodesInOrder;
   }
+
+  return visitedNodesInOrder;
+}
   
   function getUnvisitedNeighbors(node, grid) {
     const neighbors = [];
