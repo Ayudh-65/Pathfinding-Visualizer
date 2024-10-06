@@ -38,6 +38,7 @@ export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState(getInitialGrid(gridSize[0], gridSize[1], startNode, finishNode));
   const [draggedNode, setDraggedNode] = useState(null);
   const [creatingWalls, setCreatingWalls] = useState(false);
+  const [showInfo, setShowInfo] = useState(true);
   
 
   const calculateGridSize = () => {
@@ -140,6 +141,12 @@ export default function PathfindingVisualizer() {
     toggleWall(row, column, !e.shiftKey);
   };
 
+  const toggleInfo = () => {
+    const infoDiv = document.getElementById("info");
+    infoDiv.className = !showInfo ? "info infoShow" : "info";
+    setShowInfo(!showInfo);
+  };
+
   const visualizeDijkstra = async () => {
     // Clear previous path and reset node states
     const newGrid = grid.map((row) =>
@@ -200,19 +207,20 @@ export default function PathfindingVisualizer() {
       <div className="menu">
         <div className="titleDiv">Pathfinding Visualizer</div>
         <div className="controlsDiv">
+          <label htmlFor="algorithm" className="algoSelectLabel">Algorithm:</label>
           <select name="algorithm" className="algoDropDown">
             <option value="dijkstra">Dijkstra's</option>
             <option value="dfs">DFS</option>
           </select>
           <button className="visualizeButton" onClick={visualizeDijkstra}>
-            Visualize
+            Start !
           </button>
           <button className="clearButton" onClick={clearGrid}>
             Clear Grid
           </button>
         </div>
         <div className="infoButtonDiv">
-          <button>i</button>
+          <button onClick={toggleInfo}>Tutorial</button>
         </div>
       </div>
       <div className="grid">
@@ -251,6 +259,32 @@ export default function PathfindingVisualizer() {
             </div>
           );
         })}
+      </div>
+
+      <div id="info" className="info infoShow ">
+        <div className="info-content">
+          <div>
+            <div className="info-title">Welcome to Pathfinding Visualizer!</div>
+            <div className="info-subtitle">An interactive shortest path finding algorithm visualizer.</div>
+          </div> 
+          <div className="info-legend">
+            <div><div className="node start"></div>Start Node</div>
+            <div><div className="node finish"></div>Finish Node</div>
+            <div><div className="node wall"></div>Wall Node</div>
+            <div><div className="node visited"></div>Explored Node</div>
+            <div><div className="node path"></div>Shortest Path</div>
+          </div>
+          <div className="info-legend2">
+            <div><b className="control-title"><u>Controls:</u></b></div>
+            <div>▶ <b>Create Walls: </b> Left Click</div>
+            <div>▶ <b>Remove Walls: </b> Shift + Left Click</div>
+            <div>▶ <b>Move Start/Finish Nodes: </b> Drag & Drop</div>
+          </div>
+          <div className="info-legend2">
+            <div>Try different algorithms from the drop-down and visualize how they work.</div>
+          </div>
+        </div>
+        <button onClick={toggleInfo}>Jump In!</button>
       </div>
     </div>
   );
