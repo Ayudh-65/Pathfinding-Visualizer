@@ -64,8 +64,6 @@
     background-color: black;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease;
-    border: none;
-    outline: none;
 }
 
 .algoDropDown:hover {
@@ -112,6 +110,7 @@
         border-radius: 6px;
         cursor: pointer;
         margin: 0.5vw;
+        transition: transform 0.2s ease;
     }
 }
 
