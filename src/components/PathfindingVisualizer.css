@@ -37,6 +37,26 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.github-button {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    img {
+        padding-left: 10px;
+        padding-top: 4px;
+        width: 23px;
+        height: 23px;
+    }
+}
+
+.github-button:hover {
+    transform: scale(1.1);
+}
+
 .controlsDiv {
     justify-content: center;
     button, select, label {

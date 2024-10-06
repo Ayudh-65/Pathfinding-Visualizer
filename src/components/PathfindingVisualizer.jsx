@@ -233,7 +233,13 @@ export default function PathfindingVisualizer() {
   return (
     <div className="base">
       <div className="menu">
-        <div className="titleDiv">Pathfinding Visualizer</div>
+        <div className="titleDiv">Pathfinding Visualizer 
+          <a href="https://github.com/Ayudh-65/pathfinding-visualizer" target="_blank" rel="noopener noreferrer">
+            <button className="github-button">
+              <img src={`${process.env.PUBLIC_URL}/github-logo.svg`} alt="GitHub Logo" />
+            </button>
+          </a>
+        </div>
         <div className="controlsDiv">
           <label htmlFor="algorithm" className="algoSelectLabel">Algorithm:</label>
           <select onChange={(e) => handleAlgoChange(e)} id="algorithm" className="algoDropDown">
@@ -251,7 +257,7 @@ export default function PathfindingVisualizer() {
           <button onClick={toggleInfo}>Tutorial</button>
         </div>
       </div>
-      
+
       <div className="grid">
         {grid.map((row, rowId) => {
           return (
