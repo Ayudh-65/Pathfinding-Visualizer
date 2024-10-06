@@ -22,23 +22,23 @@ export function depthFirstSearch(grid, startNode, finishNode) {
 
   return visitedNodesInOrder;
 }
-  
-  function getUnvisitedNeighbors(node, grid) {
-    const neighbors = [];
-    const { column, row } = node;
-    if (row > 0) neighbors.push(grid[row - 1][column]);
-    if (row < grid.length - 1) neighbors.push(grid[row + 1][column]);
-    if (column > 0) neighbors.push(grid[row][column - 1]);
-    if (column < grid[0].length - 1) neighbors.push(grid[row][column + 1]);
-    return neighbors.filter(neighbor => !neighbor.isVisited);
+
+function getUnvisitedNeighbors(node, grid) {
+  const neighbors = [];
+  const { column, row } = node;
+  if (row > 0) neighbors.push(grid[row - 1][column]);
+  if (row < grid.length - 1) neighbors.push(grid[row + 1][column]);
+  if (column > 0) neighbors.push(grid[row][column - 1]);
+  if (column < grid[0].length - 1) neighbors.push(grid[row][column + 1]);
+  return neighbors.filter((neighbor) => !neighbor.isVisited);
+}
+
+export function getDfsNodesInShortestPathOrder(finishNode) {
+  const nodesInShortestPathOrder = [];
+  let currentNode = finishNode;
+  while (currentNode !== null) {
+    nodesInShortestPathOrder.unshift(currentNode);
+    currentNode = currentNode.previousNode;
   }
-  
-  export function getDfsNodesInShortestPathOrder(finishNode) {
-    const nodesInShortestPathOrder = [];
-    let currentNode = finishNode;
-    while (currentNode !== null) {
-      nodesInShortestPathOrder.unshift(currentNode);
-      currentNode = currentNode.previousNode;
-    }
-    return nodesInShortestPathOrder;
-  }
+  return nodesInShortestPathOrder;
+}

@@ -47,7 +47,7 @@ function getUnvisitedNeighbors(node, grid) {
   if (row < grid.length - 1) neighbors.push(grid[row + 1][column]);
   if (column > 0) neighbors.push(grid[row][column - 1]);
   if (column < grid[0].length - 1) neighbors.push(grid[row][column + 1]);
-  return neighbors.filter(neighbor => !neighbor.isVisited);
+  return neighbors.filter((neighbor) => !neighbor.isVisited);
 }
 
 function getAllNodes(grid) {

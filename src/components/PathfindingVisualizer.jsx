@@ -155,7 +155,7 @@ export default function PathfindingVisualizer() {
 
   const getVisitedNodes = (newGrid, startNodeObj, finishNodeObj) => {
     switch(algorithm) {
-      case "dijkstra":
+      case "bfs":
         return breadthFirstSearch(newGrid, startNodeObj, finishNodeObj);
       case "dfs":
         return depthFirstSearch(newGrid, startNodeObj, finishNodeObj);
@@ -166,7 +166,7 @@ export default function PathfindingVisualizer() {
 
   const getNodesInShortestPathOrder = (finishNodeObj) => {
     switch(algorithm) {
-      case "dijkstra":
+      case "bfs":
         return getBfsNodesInShortestPathOrder(finishNodeObj);
       case "dfs":
         return getDfsNodesInShortestPathOrder(finishNodeObj);
