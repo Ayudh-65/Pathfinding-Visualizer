@@ -2,7 +2,7 @@
 // Also makes nodes point back to their previous node, to allow us to backtrack
 
 // dijkstra.js
-export async function dijkstra(grid, startNode, finishNode) {
+export function breadthFirstSearch(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
   startNode.distance = 0;
   const unvisitedNodes = getAllNodes(grid);
@@ -60,7 +60,7 @@ function getAllNodes(grid) {
   return nodes;
 }
 
-export async function getDijkstraNodesInShortestPathOrder(finishNode) {
+export function getBfsNodesInShortestPathOrder(finishNode) {
   const nodesInShortestPathOrder = [];
   let currentNode = finishNode;
   while (currentNode !== null) {

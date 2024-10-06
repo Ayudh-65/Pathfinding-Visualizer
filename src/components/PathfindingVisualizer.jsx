@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { dijkstra, getDijkstraNodesInShortestPathOrder } from "../algorithms/dijkstra";
+import { breadthFirstSearch, getBfsNodesInShortestPathOrder } from "../algorithms/bfs";
+import { depthFirstSearch, getDfsNodesInShortestPathOrder } from "../algorithms/dfs";
 import "./Node.css";
 import "./PathfindingVisualizer.css";
 
@@ -39,6 +40,7 @@ export default function PathfindingVisualizer() {
   const [draggedNode, setDraggedNode] = useState(null);
   const [creatingWalls, setCreatingWalls] = useState(false);
   const [showInfo, setShowInfo] = useState(true);
+  const [algorithm, setAlgorithm] = useState("bfs");
   
 
   const calculateGridSize = () => {
@@ -147,7 +149,33 @@ export default function PathfindingVisualizer() {
     setShowInfo(!showInfo);
   };
 
-  const visualizeDijkstra = async () => {
+  const handleAlgoChange = (e) => {
+    setAlgorithm(e.target.value);
+  };
+
+  const getVisitedNodes = (newGrid, startNodeObj, finishNodeObj) => {
+    switch(algorithm) {
+      case "dijkstra":
+        return breadthFirstSearch(newGrid, startNodeObj, finishNodeObj);
+      case "dfs":
+        return depthFirstSearch(newGrid, startNodeObj, finishNodeObj);
+      default:
+        return breadthFirstSearch(newGrid, startNodeObj, finishNodeObj);
+    }
+  };
+
+  const getNodesInShortestPathOrder = (finishNodeObj) => {
+    switch(algorithm) {
+      case "dijkstra":
+        return getBfsNodesInShortestPathOrder(finishNodeObj);
+      case "dfs":
+        return getDfsNodesInShortestPathOrder(finishNodeObj);
+      default:
+        return getBfsNodesInShortestPathOrder(finishNodeObj);
+    }
+  };
+
+  const visualizeAlgorithm = async () => {
     // Clear previous path and reset node states
     const newGrid = grid.map((row) =>
       row.map((node) => {
@@ -178,8 +206,8 @@ export default function PathfindingVisualizer() {
 
     const startNodeObj = newGrid[startNode[0]][startNode[1]];
     const finishNodeObj = newGrid[finishNode[0]][finishNode[1]];
-    const visitedNodesInOrder = await dijkstra(newGrid, startNodeObj, finishNodeObj);
-    const nodesInShortestPathOrder = await getDijkstraNodesInShortestPathOrder(finishNodeObj);
+    const visitedNodesInOrder = getVisitedNodes(newGrid, startNodeObj, finishNodeObj);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNodeObj);
 
     for (let i = 0; i < visitedNodesInOrder.length; i++) {
       setTimeout(() => {
@@ -208,11 +236,11 @@ export default function PathfindingVisualizer() {
         <div className="titleDiv">Pathfinding Visualizer</div>
         <div className="controlsDiv">
           <label htmlFor="algorithm" className="algoSelectLabel">Algorithm:</label>
-          <select name="algorithm" className="algoDropDown">
+          <select onChange={(e) => handleAlgoChange(e)} id="algorithm" className="algoDropDown">
             <option value="dijkstra">Dijkstra's</option>
             <option value="dfs">DFS</option>
           </select>
-          <button className="visualizeButton" onClick={visualizeDijkstra}>
+          <button className="visualizeButton" onClick={visualizeAlgorithm}>
             Start !
           </button>
           <button className="clearButton" onClick={clearGrid}>
@@ -223,6 +251,7 @@ export default function PathfindingVisualizer() {
           <button onClick={toggleInfo}>Tutorial</button>
         </div>
       </div>
+      
       <div className="grid">
         {grid.map((row, rowId) => {
           return (
@@ -265,7 +294,7 @@ export default function PathfindingVisualizer() {
         <div className="info-content">
           <div>
             <div className="info-title">Welcome to Pathfinding Visualizer!</div>
-            <div className="info-subtitle">An interactive shortest path finding algorithm visualizer.</div>
+            <div className="info-subtitle">An interactive path finding algorithm visualizer.</div>
           </div> 
           <div className="info-legend">
             <div><div className="node start"></div>Start Node</div>
