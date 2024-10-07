@@ -2,7 +2,7 @@
 
 - An interactive shortest pathfinding algorithm visualizer.
 - Demonstrates how popular graph search algorithms like Dijkstra's and A* explore different paths through obstacles and find the shortest path between two points on a grid.
-- It features interactive node placement and wall creation to visualize customized scenarios.
+- It features a fully dynamic grid with interactive node placement and wall creation to visualize customized scenarios.
 
 ## Run Locally
 
