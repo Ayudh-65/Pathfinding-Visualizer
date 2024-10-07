@@ -2,6 +2,7 @@
     height: 100vh;
     width: 100vw;
     background-color: black;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .grid {
@@ -33,6 +34,7 @@
 .titleDiv {
     padding-inline: 2vw;
     font-size: 1.7rem;
+    justify-content: flex-start;
     font-weight: 800 !important;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     color: black;
@@ -120,7 +122,7 @@
 }
 
 .infoButtonDiv {
-    justify-content: end;
+    justify-content: flex-end;
     padding-inline: 2vw;
     button {
         background-color: black;
