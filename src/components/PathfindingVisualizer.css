@@ -1,8 +1,11 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 .base {
     height: 100vh;
     width: 100vw;
     background-color: black;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .grid {
@@ -37,7 +40,6 @@
     display: flex;
     justify-content: flex-start;
     font-weight: 800 !important;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
     color: black;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
