@@ -34,7 +34,7 @@
 .titleDiv {
     padding-inline: 2vw;
     font-size: 1.7rem;
-    width: auto;
+    display: flex;
     justify-content: flex-start;
     font-weight: 800 !important;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
@@ -123,9 +123,9 @@
 }
 
 .infoButtonDiv {
+    display: flex;
     justify-content: flex-end;
     padding-inline: 2vw;
-    width: auto;
     button {
         background-color: black;
         padding: 1vh 1vw;
